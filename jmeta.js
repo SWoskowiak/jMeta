@@ -6,6 +6,7 @@ let _ = require('lodash')
 function walkJSON (obj, func) {
   const traverse = (obj, curDepth, path, key) => {
     if (curDepth && key) func.apply(this, [key, curDepth, path])
+    if (!obj) return // Bail on falsey obj ref
     // If this entry is an array then loop over its contents
     if (_.isArray(obj)) {
       obj.forEach((val, index) => {
@@ -20,6 +21,9 @@ function walkJSON (obj, func) {
         if (obj[key] !== null) {
           let newPath = path.length ? `${path}.${key}` : key
           traverse(obj[key], curDepth + 1, newPath, key)
+        } else {
+          let newPath = path.length ? `${path}.${key}` : key
+          func.apply(this, [key, curDepth + 1, newPath])
         }
       })
     }
@@ -30,13 +34,10 @@ function walkJSON (obj, func) {
 // JSON meta data mapping utility
 // Recursively walk a JSON tree ( Depth First ) and map out properties to allow for arbitrary value fetching by key and depth fetching.
 class JMETA {
-  constructor (obj, config = { uniqueOnly: false }) {
+  constructor (obj) {
     if (!_.isObject(obj)) throw new Error('Must pass a valid JS object')
-
-    // Allow unique keys only, throws error on parsing duplicate key
-    this.uniqueOnly = config.uniqueOnly
+    // Define internals to build upon as we walk through a JSON object
     this._map = new Map()
-
     this._duplicates = []
     // Begin traversal of this object (depth first)
     walkJSON.call(this, obj, this._add)
@@ -102,8 +103,6 @@ class JMETA {
 
     // This key has already been set in our map
     if (existing) {
-      // If we are configured for unique only be sure to error out on duplicates
-      if (this.uniqueOnly) throw new Error(`JMAP: Cannot set ${key}, as it already exists (uniqueOnly)`)
       // Push new data into place at the existing key
       existing.push({ depth, path })
       this._map.set(key, existing)

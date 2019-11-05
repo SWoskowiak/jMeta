@@ -37,7 +37,9 @@ describe('jMeta', () => {
       three: {
         a: 'hello',
         f: 'world'
-      }
+      },
+      four: null,
+      five: [ { x: null } ]
     }
   })
 
@@ -103,6 +105,15 @@ describe('jMeta', () => {
           ]],
           ['three', [
             { depth: 1, path: 'three' }
+          ]],
+          ['four', [
+            { depth: 1, path: 'four' }
+          ]],
+          ['five', [
+            { depth: 1, path: 'five' }
+          ]],
+          ['x', [
+            { depth: 3, path: 'five[0].x' }
           ]]
         ])
 
@@ -192,6 +203,9 @@ describe('jMeta', () => {
         // Sort results for simplicity of checking
         let paths = jmeta.paths().sort()
         expect(paths).to.deep.equal([
+          'five',
+          'five[0].x',
+          'four',
           'one',
           'one.a',
           'one.b',
@@ -276,7 +290,9 @@ describe('jMeta', () => {
         expect(paths).to.deep.equal([
           'one',
           'two',
-          'three'
+          'three',
+          'four',
+          'five'
         ])
 
         paths = jmeta.paths({ depth: 2 })
@@ -293,7 +309,8 @@ describe('jMeta', () => {
         paths = jmeta.paths({ depth: 3 })
         expect(paths).to.deep.equal([
           'two.a.c',
-          'two.a.d'
+          'two.a.d',
+          'five[0].x'
         ])
 
         paths = jmeta.paths({ depth: 4 })
@@ -422,6 +439,26 @@ describe('jMeta', () => {
         expect(err.message).to.contain('"includes" must be a non-empty string')
       })
     })
+
+    context('when some filtering combos are used', () => {
+      it('filters as expected', () => {
+        let paths = jmeta.paths({ includes: 'thing', depth: 4 })
+        expect(paths).to.deep.equal([
+          'one.d[0].thingOne',
+          'one.d[1].thingTwo',
+          'one.d[2].thingThree'
+        ])
+
+        paths = jmeta.paths({ key: 'thingOne', includes: 'thing', depth: 1 })
+        expect(paths).to.deep.equal([])
+
+        paths = jmeta.paths({ includes: 'thing', depth: 4, key: 'thingOne' })
+        expect(paths).to.deep.equal([ 'one.d[0].thingOne' ])
+
+        paths = jmeta.paths({ depth: 1, key: 'INVALID' })
+        expect(paths).to.deep.equal([])
+      })
+    })
   })
 
   describe('keys', () => {
@@ -430,7 +467,7 @@ describe('jMeta', () => {
       jmeta = new JMeta(baseExample)
     })
 
-    it('returns the given keys of an object', () => {
+    it('returns the given keys of an object (in depth first order)', () => {
       let keys = jmeta.keys()
       expect(keys).to.deep.equal([
         'one',
@@ -446,7 +483,10 @@ describe('jMeta', () => {
         'e',
         'f',
         'hiddenDeep',
-        'three'
+        'three',
+        'four',
+        'five',
+        'x'
       ])
     })
 
@@ -456,7 +496,9 @@ describe('jMeta', () => {
         expect(keys).to.deep.equal([
           'one',
           'two',
-          'three'
+          'three',
+          'four',
+          'five'
         ])
 
         keys = jmeta.keys({ depth: 2 })
@@ -471,7 +513,8 @@ describe('jMeta', () => {
         keys = jmeta.keys({ depth: 3 })
         expect(keys).to.deep.equal([
           'c',
-          'd'
+          'd',
+          'x'
         ])
 
         keys = jmeta.keys({ depth: 4 })
@@ -560,6 +603,55 @@ describe('jMeta', () => {
 
       it('returns the accurate size', () => {
         expect(jmap.size).to.equal(10)
+      })
+    })
+  })
+
+  describe('duplicates', () => {
+    context('when there are some duplicate properties', () => {
+      let jmap
+      beforeEach(() => {
+        jmap = new JMeta({
+          a: { a: [ { a: 1 } ] },
+          b: { c: { c: 2 } },
+          d: { e: { f: [ { f: 2 } ] } }
+        })
+      })
+
+      it('returns duplicate keys as an array', () => {
+        expect(jmap.duplicates).to.deep.equal([
+          'a',
+          'a',
+          'c',
+          'f'
+        ])
+      })
+    })
+
+    context('when there are no duplicates', () => {
+      let jmap
+      beforeEach(() => {
+        jmap = new JMeta({
+          a: {},
+          b: {},
+          c: {}
+        })
+      })
+      it('returns an empty array', () => {
+        expect(jmap.duplicates).to.deep.equal([])
+      })
+    })
+  })
+
+  describe('map', () => {
+    context('returns the Map() instance we generated directly', () => {
+      let jmap
+      beforeEach(() => {
+        jmap = new JMeta({ a: 1 })
+      })
+
+      it('returns the map object', () => {
+        expect(jmap.map).to.be.instanceOf(Map)
       })
     })
   })
