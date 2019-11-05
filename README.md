@@ -8,7 +8,7 @@ Generated paths are compatible with Lodash's `_.get` and `_.set` to help manipul
 
 The generated data is in an accessible `Map` object which you can run generator functions over as necessary or use the built in keys() and paths() to retrieve information in more familiar way.
 
-## Install/Add
+## Install
 
 `npm install jmeta` or `yarn add jmeta`
 
@@ -32,19 +32,48 @@ The generated data is in an accessible `Map` object which you can run generator 
   
 ```
 
-### Paths()
+## Paths()
 Takes an options object as its only parameter to specify some basic filtering
-The options object supports the following filters: `{ depth, includes, key }`
+The options object supports the following filters: `{ depth: <number>, includes: <string>, key: <string> }`
 Filtering options can be combined in any way to reduce results accordingly
 
 NOTE: Will always return an array, on no results found the results will simply be `[]`
-#### Depth
+#### Filtering Paths
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
   
   const data = {
-    a: { b: { c: [ [ { d: true }, 'ignored', { a: 'duplicate' } ] ] } }
+    location: {
+      france: [ { name: 'Tom' }, { name: 'Mary' } ],
+      italy: [ { name: 'Mike' } ]
+    }
+  }
+  const jmeta = new JMeta(data)
+
+  // DEPTH FILTERING
+  console.log(jmeta.paths({ depth: 2 })) // Outputs: ['location.france', 'location.italy']
+  console.log(jmeta.paths({ depth: 4 })) // Outputs: ['location.france[0].name', 'location.france[1].name', 'location.italy[0].name']
+
+  // PATH INCLUDES FILTERING
+  console.log(jmeta.paths({ includes: 'france' }))    // Outputs: ['location.france', 'location.france[0].name', 'location.france[1].name']
+  console.log(jmeta.paths({ includes: 'france[0]' })) // Outputs: ['location.france[0].name']
+
+  // KEY FILTERING
+  console.log(jmeta.paths({ key: 'france' })) // Outputs: ['location.france']
+  console.log(jmeta.paths({ key: 'name' })  // Outputs: ['location.france[0].name', 'location.france[1].name', 'location.italy[0].name']
+  
+```
+#### Includes
+```javascript
+  const JMeta = require('jmeta')
+  const _ = require('lodash')
+  
+  const data = {
+    location: {
+      france: [ { person: 'Tom' }, { person: 'Mary' } ],
+      italy: [ { person: 'Mike' } ]
+    }
   }
   const jmeta = new JMeta(data)
   
