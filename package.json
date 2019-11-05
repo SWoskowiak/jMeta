@@ -12,7 +12,6 @@
   "scripts": {
     "test": "node_modules/.bin/mocha jmeta.test.js --exit --timeout 5000",
     "coverage": "nyc report",
-    "report": "nyc report --reporter=text-lcov | coveralls",
-    "coveralls": "yarn report"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   }
 }
