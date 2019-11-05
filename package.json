@@ -21,7 +21,8 @@
     "meta",
     "metadata",
     "paths",
-    "keys"
+    "keys",
+    "lodash"
   ],
   "dependencies": {
     "lodash": "^4.17.15"
