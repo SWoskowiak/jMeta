@@ -30,7 +30,7 @@ The generated data is in an accessible `Map` object which you can run generator 
   
   console.log(jmeta.paths())     // Outputs: [ 'a', 'a.b.c[0][2].a', 'a.b', 'a.b.c', 'a.b.c[0][0].d' ]
   console.log(jmeta.keys())      // Outputs: [ 'a', 'b', 'c', 'd' ] NOTE: Unique keys
-  console.log(jmeta.size)        // Outputs: 5                      NOTE: Accounts for duplicate found keys
+  console.log(jmeta.size)        // Outputs: 5 (NOTE: Accounts for duplicate found keys)
   console.log(jmeta.duplicates)  // Outputs: [ 'a' ]
   
   let foo = _.get(data, jmeta.paths()[1]) // 'a.b.c[0][2].a'
