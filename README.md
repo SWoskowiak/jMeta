@@ -42,11 +42,12 @@ The generated data is in an accessible `Map` object which you can run generator 
 ```
 
 ## Paths()
-Takes an options object as its only parameter to specify some basic filtering
-The options object supports the following filters: `{ depth: <number>, includes: <string>, key: <string> }`
-Filtering options can be combined in any way to reduce results accordingly
+Takes an options object as its only parameter to specify some basic filtering.
+The options object supports the following filters: 
+`{ depth: <number>, includes: <string>, key: <string> }`.
+Filtering options can be combined in any way to reduce results accordingly.
 
-NOTE: Will always return an array, on no results found the results will simply be `[]`
+NOTE: Paths() will always return an array, on no results found the return will simply be an empty array `[]`.
 #### Filtering Paths
 ```javascript
   const JMeta = require('jmeta')
@@ -74,6 +75,8 @@ NOTE: Will always return an array, on no results found the results will simply b
   
 ```
 ## Keys()
+Takes an options object as its only parameter to specify some basic filtering The options object supports the following filters: { depth: <number> }.
+  
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
@@ -87,7 +90,7 @@ NOTE: Will always return an array, on no results found the results will simply b
   const jmeta = new JMeta(data)
   
   console.log(jmeta.keys())                // Outputs: [ 'location', 'france', 'person', 'italy' ] NOTE: Returns unique found keys only
-  console.log(jmeta.paths({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
-  console.log(jmeta.paths({ depth: 4 }))   // Outputs: [ 'person' ]
+  console.log(jmeta.keys({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
+  console.log(jmeta.keys({ depth: 4 }))   // Outputs: [ 'person' ]
   
 ```
