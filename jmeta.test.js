@@ -577,9 +577,9 @@ describe('jMeta', () => {
 
   describe('size', () => {
     context('when there are no duplicate properties', () => {
-      let jmap
+      let jmeta
       beforeEach(() => {
-        jmap = new JMeta({
+        jmeta = new JMeta({
           a: {},
           b: { c: {} },
           d: { e: { f: { } } }
@@ -587,14 +587,14 @@ describe('jMeta', () => {
       })
 
       it('returns the size', () => {
-        expect(jmap.size).to.equal(6)
+        expect(jmeta.size).to.equal(6)
       })
     })
 
     context('when there are duplicate properties that are trickier to count', () => {
-      let jmap
+      let jmeta
       beforeEach(() => {
-        jmap = new JMeta({
+        jmeta = new JMeta({
           a: { a: [ { a: 1 } ] },
           b: { c: { c: 2 } },
           d: { e: { f: [ { f: 2 } ] } }
@@ -602,16 +602,16 @@ describe('jMeta', () => {
       })
 
       it('returns the accurate size', () => {
-        expect(jmap.size).to.equal(10)
+        expect(jmeta.size).to.equal(10)
       })
     })
   })
 
   describe('duplicates', () => {
     context('when there are some duplicate properties', () => {
-      let jmap
+      let jmeta
       beforeEach(() => {
-        jmap = new JMeta({
+        jmeta = new JMeta({
           a: { a: [ { a: 1 } ] },
           b: { c: { c: 2 } },
           d: { e: { f: [ { f: 2 } ] } }
@@ -619,7 +619,7 @@ describe('jMeta', () => {
       })
 
       it('returns duplicate keys as an array', () => {
-        expect(jmap.duplicates).to.deep.equal([
+        expect(jmeta.duplicates).to.deep.equal([
           'a',
           'a',
           'c',
@@ -629,29 +629,29 @@ describe('jMeta', () => {
     })
 
     context('when there are no duplicates', () => {
-      let jmap
+      let jmeta
       beforeEach(() => {
-        jmap = new JMeta({
+        jmeta = new JMeta({
           a: {},
           b: {},
           c: {}
         })
       })
       it('returns an empty array', () => {
-        expect(jmap.duplicates).to.deep.equal([])
+        expect(jmeta.duplicates).to.deep.equal([])
       })
     })
   })
 
   describe('map', () => {
     context('returns the Map() instance we generated directly', () => {
-      let jmap
+      let jmeta
       beforeEach(() => {
-        jmap = new JMeta({ a: 1 })
+        jmeta = new JMeta({ a: 1 })
       })
 
       it('returns the map object', () => {
-        expect(jmap.map).to.be.instanceOf(Map)
+        expect(jmeta.map).to.be.instanceOf(Map)
       })
     })
   })
