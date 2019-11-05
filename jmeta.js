@@ -31,9 +31,12 @@ function walkJSON (obj, func) {
   return traverse(obj, 0, '')
 }
 
-// JSON meta data mapping utility
-// Recursively walk a JSON tree ( Depth First ) and map out properties to allow for arbitrary value fetching by key and depth fetching.
+/** Class JMETA - meta data mapping utility */
 class JMETA {
+  /**
+     * Create a new jmeta instance.
+     * @param {object} obj - The object to parse meta data out of
+  */
   constructor (obj) {
     if (!_.isObject(obj)) throw new Error('Must pass a valid JS object')
     // Define internals to build upon as we walk through a JSON object
@@ -44,10 +47,27 @@ class JMETA {
   }
 
   // Getters
+  /**
+   * Return the Map generated from the parsed object
+   * @type {Map}
+  */
   get map () { return this._map }
+  /**
+   * Return all found duplicate entry keys
+   * @type {array}
+  */
   get duplicates () { return this._duplicates }
+  /**
+   * Return total number of entries found (including duplicates)
+   * @type {number}
+  */
   get size () { return this._map.size + this._duplicates.length }
 
+  /**
+ * Get an array of unique found keys for the parsed object.
+ * @param {object} options - Options to filter keys on.
+ * @param {number} options.depth - Only return keys at a given depth.
+ */
   keys ({ depth } = {}) {
     if ((depth !== undefined) && (!_.isNumber(depth) || isNaN(depth))) throw new Error('"depth" must be a number')
     let results = []
@@ -62,6 +82,13 @@ class JMETA {
     return results
   }
 
+  /**
+ * Get an array of all paths found for the parsed object.
+ * @param {object} options - Options to filter paths on.
+ * @param {number} options.depth - Only return paths at a given depth.
+ * @param {string} options.key - Only return paths for a given known key.
+ * @param {string} options.includes - Only return paths that include this string (case-sensitive).
+ */
   paths ({ key, depth, includes } = {}) {
     if ((key !== undefined) && !_.isString(key)) throw new Error('"key" must be a string')
     if ((depth !== undefined) && (!_.isNumber(depth) || isNaN(depth))) throw new Error('"depth" must be a number')
