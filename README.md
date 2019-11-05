@@ -75,7 +75,8 @@ NOTE: Paths() will always return an array, on no results found the return will s
   
 ```
 ## Keys()
-Takes an options object as its only parameter to specify some basic filtering The options object supports the following filters: { depth: <number> }.
+Takes an options object as its only parameter to specify some basic filtering The options object supports the following filters: 
+`{ depth: <number> }`.
   
 ```javascript
   const JMeta = require('jmeta')
