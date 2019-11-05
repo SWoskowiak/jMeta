@@ -12,7 +12,7 @@ The generated data is in an accessible `Map` object which you can run generator 
 
 `npm install jmeta` or `yarn add jmeta`
 
-## Basic Usage
+## Basic Usage 
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
@@ -35,6 +35,9 @@ The generated data is in an accessible `Map` object which you can run generator 
   
   let foo = _.get(data, jmeta.paths()[1]) // 'a.b.c[0][2].a'
   console.log(foo)                        // Outputs: 'duplicate'
+  
+  // Access the map object directly
+  console.log(jmeta.map.get('a')) // Outputs: [ { depth: 1, path: 'a' }, { depth: 6, path: 'a.b.c[0][2].a' } ]
   
 ```
 
