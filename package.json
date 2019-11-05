@@ -2,7 +2,7 @@
   "author": "Stefan Woskowiak <swoskowiak@gmail.com> (rixcode.com)",
   "name": "jmeta",
   "description": "JSON metadata generator, outputs lodash compatible get/set strings",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "url": "https://github.com/SWoskowiak/jMeta"
   },
