@@ -6,7 +6,7 @@ A JSON mapping utility to help generate meta data of a JSON object. Maps depth a
 
 Generated paths are compatible with Lodash's `_.get` and `_.set` to help manipulate deep data sets.
 
-The generated data is in an accessible `Map` object which you can run generator functions over as necessary or use the built in keys() and paths() to retrieve information in more familiar way.
+The generated data is in an accessible `Map` object which you can run generator functions over as necessary or use the built in keys() and paths() to retrieve information in a more familiar way.
 
 ## Install
 
@@ -64,7 +64,7 @@ NOTE: Will always return an array, on no results found the results will simply b
   console.log(jmeta.paths({ key: 'name' })  // Outputs: ['location.france[0].name', 'location.france[1].name', 'location.italy[0].name']
   
 ```
-#### Includes
+## Keys()
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
@@ -77,8 +77,8 @@ NOTE: Will always return an array, on no results found the results will simply b
   }
   const jmeta = new JMeta(data)
   
-  console.log(jmeta.paths())               // Outputs: [ 'a', 'a.b.c[0][2].a', 'a.b', 'a.b.c', 'a.b.c[0][0].d' ]
-  console.log(jmeta.paths({ depth: 1 }))   // Outputs: [ 'a' ]
-  console.log(jmeta.paths({ depth: 6 }))   // Outputs: [ 'a.b.c[0][2].a', 'a.b.c[0][0].d' ]   NOTE: Array depth is included in determining final depth value
+  console.log(jmeta.keys())                // Outputs: [ 'location', 'france', 'person', 'italy' ] NOTE: Returns unique found keys only
+  console.log(jmeta.paths({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
+  console.log(jmeta.paths({ depth: 4 }))   // Outputs: [ 'person' ]
   
 ```
