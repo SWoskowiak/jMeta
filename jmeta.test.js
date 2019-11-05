@@ -112,7 +112,7 @@ describe('jMeta', () => {
       })
     })
 
-    context('when the parse target is an array', () => {
+    context('when the parse target is an array (and also contains arrays)', () => {
       let jmeta, data
       beforeEach(() => {
         data = [
@@ -146,6 +146,39 @@ describe('jMeta', () => {
           ]]
         ])
       })
+    })
+
+    context('when the object to parse is not a valid object', () => {
+      let err, res
+      try {
+        res = new JMeta(1)
+      } catch (e) {
+        err = e
+      }
+
+      expect(res).to.be.undefined()
+      expect(err).to.not.be.undefined()
+      expect(err.message).to.contain('Must pass a valid JS object')
+
+      err = undefined
+      res = undefined
+      try {
+        res = new JMeta('123')
+      } catch (e) {
+        err = e
+      }
+
+      err = undefined
+      res = undefined
+      try {
+        res = new JMeta(false)
+      } catch (e) {
+        err = e
+      }
+
+      expect(res).to.be.undefined()
+      expect(err).to.not.be.undefined()
+      expect(err.message).to.contain('Must pass a valid JS object')
     })
   })
 
@@ -350,7 +383,7 @@ describe('jMeta', () => {
       })
     })
 
-    context.only('when an invalid includes filter is supplied', () => {
+    context('when an invalid includes filter is supplied', () => {
       it('throws an error', () => {
         let err
         try {
@@ -377,7 +410,7 @@ describe('jMeta', () => {
           err = e
         }
         expect(err).to.not.be.undefined()
-        expect(err.message).to.contain('"includes" must be a non-empty strings')
+        expect(err.message).to.contain('"includes" must be a non-empty string')
 
         err = undefined
         try {
@@ -392,32 +425,109 @@ describe('jMeta', () => {
   })
 
   describe('keys', () => {
+    let jmeta
+    beforeEach(() => {
+      jmeta = new JMeta(baseExample)
+    })
+
     it('returns the given keys of an object', () => {
-
+      let keys = jmeta.keys()
+      expect(keys).to.deep.equal([
+        'one',
+        'a',
+        'b',
+        'c',
+        'd',
+        'thingOne',
+        'thingTwo',
+        'thingThree',
+        'nestedDeep',
+        'two',
+        'e',
+        'f',
+        'hiddenDeep',
+        'three'
+      ])
     })
-    context('', () => {
-      let jmap
-      beforeEach(() => {
-        jmap = new JMeta({
-          a: {},
-          b: { c: {} },
-          d: { e: { f: { } } }
-        })
-      })
 
-      it('returns the size', () => {
-        expect(jmap.size()).to.equal(6)
+    context('when there is a depth specified', () => {
+      it('returns the keys at the given depth', () => {
+        let keys = jmeta.keys({ depth: 1 })
+        expect(keys).to.deep.equal([
+          'one',
+          'two',
+          'three'
+        ])
+
+        keys = jmeta.keys({ depth: 2 })
+        expect(keys).to.deep.equal([
+          'a',
+          'b',
+          'c',
+          'd',
+          'f'
+        ])
+
+        keys = jmeta.keys({ depth: 3 })
+        expect(keys).to.deep.equal([
+          'c',
+          'd'
+        ])
+
+        keys = jmeta.keys({ depth: 4 })
+        expect(keys).to.deep.equal([
+          'thingOne',
+          'thingTwo',
+          'thingThree',
+          'e',
+          'f'
+        ])
+
+        keys = jmeta.keys({ depth: 6 })
+        expect(keys).to.deep.equal([
+          'thingOne'
+        ])
+
+        keys = jmeta.keys({ depth: 7 })
+        expect(keys).to.deep.equal([
+          'nestedDeep'
+        ])
+
+        keys = jmeta.keys({ depth: 8 })
+        expect(keys).to.deep.equal([
+          'hiddenDeep'
+        ])
       })
     })
 
-    context('when there are duplicate properties that are trickier to count', () => {
-      let jmap
-      beforeEach(() => {
-        jmap = new JMAP(data)
-      })
+    context('when the depth specified is not a valid number', () => {
+      it('throws and error', () => {
+        let err
+        try {
+          jmeta.keys({ depth: NaN })
+        } catch (e) {
+          err = e
+        }
+        expect(err).to.not.be.undefined()
+        expect(err.message).to.contain('"depth" must be a number')
 
-      it('returns the accurate size', () => {
-        expect(jmap.size(data)).to.equal(12)
+        err = undefined
+        try {
+          jmeta.keys({ depth: '123' })
+        } catch (e) {
+          err = e
+        }
+        expect(err).to.not.be.undefined()
+        expect(err.message).to.contain('"depth" must be a number')
+
+        err = undefined
+        try {
+          jmeta.keys({ depth: {} })
+        } catch (e) {
+          err = e
+        }
+        expect(err).to.not.be.undefined()
+        expect(err.message).to.contain('"depth" must be a number')
       })
     })
   })
@@ -434,20 +544,23 @@ describe('jMeta', () => {
       })
 
       it('returns the size', () => {
-        expect(jmap.size()).to.equal(6)
+        expect(jmap.size).to.equal(6)
       })
     })
 
     context('when there are duplicate properties that are trickier to count', () => {
       let jmap
       beforeEach(() => {
-        jmap = new JMAP(data)
+        jmap = new JMeta({
+          a: { a: [ { a: 1 } ] },
+          b: { c: { c: 2 } },
+          d: { e: { f: [ { f: 2 } ] } }
+        })
       })
 
       it('returns the accurate size', () => {
-        expect(jmap.size(data)).to.equal(12)
+        expect(jmap.size).to.equal(10)
       })
     })
   })
 })
-
