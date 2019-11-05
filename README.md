@@ -10,11 +10,7 @@ The generated data is in an accessible `Map` object which you can run generator 
 
 ## Install/Add
 
-`npm install jmeta`
-
-OR
-
-`yarn add jmeta`
+`npm install jmeta` or `yarn add jmeta`
 
 ## Basic Usage
 ```javascript
