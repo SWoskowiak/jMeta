@@ -90,7 +90,7 @@ Takes an options object as its only parameter to specify some basic filtering Th
   const jmeta = new JMeta(data)
   
   console.log(jmeta.keys())                // Outputs: [ 'location', 'france', 'person', 'italy' ] NOTE: Returns unique found keys only
-  console.log(jmeta.paths({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
-  console.log(jmeta.paths({ depth: 4 }))   // Outputs: [ 'person' ]
+  console.log(jmeta.keys({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
+  console.log(jmeta.keys({ depth: 4 }))   // Outputs: [ 'person' ]
   
 ```
