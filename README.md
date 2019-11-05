@@ -18,7 +18,13 @@ The generated data is in an accessible `Map` object which you can run generator 
   const _ = require('lodash')
   
   const data = {
-    a: { b: { c: [ [ { d: true }, 'ignored', { a: 'duplicate' } ] ] } }
+    a: {
+      b: {
+        c: [
+          [ { d: true }, 'ignored', { a: 'duplicate' } ]
+        ]
+      }
+    }
   }
   const jmeta = new JMeta(data)
   
