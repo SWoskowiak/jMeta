@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.com/SWoskowiak/jMeta.svg?branch=master)](https://travis-ci.com/SWoskowiak/jMeta)
-[![Coverage Status](https://coveralls.io/repos/github/SWoskowiak/jMeta/badge.svg?branch=master)](https://coveralls.io/github/SWoskowiak/jMeta?branch=master)
 
-# jMeta
+
+# jMeta [![Build Status](https://travis-ci.com/SWoskowiak/jMeta.svg?branch=master)](https://travis-ci.com/SWoskowiak/jMeta) ![Coverage Status](https://coveralls.io/repos/github/SWoskowiak/jMeta/badge.svg?branch=master)
+
 A JSON mapping utility to help generate meta data of a JSON object. Maps depth and paths to found keys.
 
 Generated paths are compatible with Lodash's `_.get` and `_.set` to help manipulate deep data sets.
