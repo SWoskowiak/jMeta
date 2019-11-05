@@ -8,11 +8,27 @@ Generates Lodash compatible `get` and `set` strings for each element to help man
 
 Builds out this meta data in an accessible `Map` object which you can run generator functions over as necessary or use the built in keys() and paths() to retrieve information.
 
-## Usage
+## Install/Add
+
+`npm install jmeta`
+
+OR
+
+`yarn add jmeta`
+
+## Basic Usage
 ```
+  const JMeta = require('jmeta')
+  const _ = require('lodash')
+  
   const data = {
-    a: { b: { c: [ [ { d: true } ] ] } }
+    a: { b: { c: [ [ { d: true }, 'ignored', { a: 'duplicate' } ] ] } }
   }
   const jmeta = new JMeta(data)
+  
+  console.log(jmeta.paths())     // Outputs: [ 'a', 'a.b.c[0][2].a', 'a.b', 'a.b.c', 'a.b.c[0][0].d' ]
+  console.log(jmeta.keys())      // Outputs: [ 'a', 'b', 'c', 'd' ] NOTE: Unique keys
+  console.log(jmeta.size)        // Outputs: 5                      NOTE: Accounts for duplicate found keys
+  console.log(jmeta.duplicates)  // Outputs: [ 'a' ]
   
 ```
