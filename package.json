@@ -15,6 +15,14 @@
     "mocha": "^6.2.2",
     "nyc": "^14.1.1"
   },
+  "keywords": [
+    "json",
+    "map",
+    "meta",
+    "metadata",
+    "paths",
+    "keys"
+  ],
   "dependencies": {
     "lodash": "^4.17.15"
   },
