@@ -643,6 +643,32 @@ describe('jMeta', () => {
     })
   })
 
+  describe('finalPathsOnly option', () => {
+    let jmeta
+    beforeEach(() => {
+      jmeta = new JMeta(baseExample, { finalPathsOnly: true })
+    })
+
+    it('returns only the final "leaves" of the tree and not the connecting branch paths', () => {
+      expect(jmeta.paths().sort()).to.deep.equal([
+        'five[0].x',
+        'four',
+        'one.a',
+        'one.b',
+        'one.c',
+        'one.d[0].thingOne',
+        'one.d[1].thingTwo',
+        'one.d[2].thingThree',
+        'one.d[3][0][0][0].nestedDeep',
+        'three.a',
+        'three.f',
+        'two.a.c',
+        'two.a.d.e',
+        'two.a.d.f[0].thingOne[0].hiddenDeep'
+      ])
+    })
+  })
+
   describe('map', () => {
     context('returns the Map() instance we generated directly', () => {
       let jmeta

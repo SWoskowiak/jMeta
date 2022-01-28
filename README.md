@@ -12,11 +12,11 @@ The generated data is in an accessible `Map` object which you can run generator 
 
 `npm install jmeta` or `yarn add jmeta`
 
-## Basic Usage 
+## Basic Usage
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
-  
+
   const data = {
     a: {
       b: {
@@ -27,23 +27,27 @@ The generated data is in an accessible `Map` object which you can run generator 
     }
   }
   const jmeta = new JMeta(data)
-  
+
   console.log(jmeta.paths())     // Outputs: [ 'a', 'a.b.c[0][2].a', 'a.b', 'a.b.c', 'a.b.c[0][0].d' ]
   console.log(jmeta.keys())      // Outputs: [ 'a', 'b', 'c', 'd' ] NOTE: Unique keys
   console.log(jmeta.size)        // Outputs: 5 (NOTE: Accounts for duplicate found keys)
   console.log(jmeta.duplicates)  // Outputs: [ 'a' ]
-  
+
   let foo = _.get(data, jmeta.paths()[1]) // 'a.b.c[0][2].a'
   console.log(foo)                        // Outputs: 'duplicate'
-  
+
   // Access the map object directly
   console.log(jmeta.map.get('a')) // Outputs: [ { depth: 1, path: 'a' }, { depth: 6, path: 'a.b.c[0][2].a' } ]
-  
+
+  // You also have the option to get only the "leaves" of the tree. This will return all the final paths and not their connecting branches to them.
+  const jmeta = new JMeta(data, { finalPathsOnly: true })
+
+  console.log(jmeta.paths()) // Outputs [ 'a.b.c[0][0].d', 'a.b.c[0][2].a' ]
 ```
 
 ## Paths()
 Takes an options object as its only parameter to specify some basic filtering.
-The options object supports the following filters: 
+The options object supports the following filters:
 `{ depth: <number>, includes: <string>, key: <string> }`.
 Filtering options can be combined in any way to reduce results accordingly.
 
@@ -52,7 +56,7 @@ NOTE: Paths() will always return an array, on no results found the return will s
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
-  
+
   const data = {
     location: {
       france: [ { name: 'Tom' }, { name: 'Mary' } ],
@@ -72,16 +76,16 @@ NOTE: Paths() will always return an array, on no results found the return will s
   // KEY FILTERING
   console.log(jmeta.paths({ key: 'france' })) // Outputs: ['location.france']
   console.log(jmeta.paths({ key: 'name' })  // Outputs: ['location.france[0].name', 'location.france[1].name', 'location.italy[0].name']
-  
+
 ```
 ## Keys()
-Takes an options object as its only parameter to specify some basic filtering The options object supports the following filters: 
+Takes an options object as its only parameter to specify some basic filtering The options object supports the following filters:
 `{ depth: <number> }`.
-  
+
 ```javascript
   const JMeta = require('jmeta')
   const _ = require('lodash')
-  
+
   const data = {
     location: {
       france: [ { person: 'Tom' }, { person: 'Mary' } ],
@@ -89,9 +93,9 @@ Takes an options object as its only parameter to specify some basic filtering Th
     }
   }
   const jmeta = new JMeta(data)
-  
-  console.log(jmeta.keys())                // Outputs: [ 'location', 'france', 'person', 'italy' ] NOTE: Returns unique found keys only
+
+  console.log(jmeta.keys())               // Outputs: [ 'location', 'france', 'person', 'italy' ] NOTE: Returns unique found keys only
   console.log(jmeta.keys({ depth: 2 }))   // Outputs: [ 'france', 'italy' ]
   console.log(jmeta.keys({ depth: 4 }))   // Outputs: [ 'person' ]
-  
+
 ```

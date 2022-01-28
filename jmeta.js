@@ -3,12 +3,16 @@ let _ = require('lodash')
 
 // Our walker function, this will visit every "node" in a JSON object
 // It keeps track of its depth and running path and passes it to the supplied callback func
-function walkJSON (obj, func) {
+function walkJSON (obj, func, options = {}) {
   const traverse = (obj, curDepth, path, key) => {
-    if (curDepth && key) func.apply(this, [key, curDepth, path])
-    if (!obj) return // Bail on falsey obj ref
+    if (curDepth && key && !options.finalPathsOnly) func.apply(this, [key, curDepth, path])
+    if (!obj) {
+      if (options.finalPathsOnly) func.apply(this, [key, curDepth, path])
+      return // Bail on falsey obj ref
+    }
     // If this entry is an array then loop over its contents
     if (_.isArray(obj)) {
+      if (!obj.length && options.finalPathsOnly) func.apply(this, [key, curDepth, path])
       obj.forEach((val, index) => {
         if (_.isObject(val) || _.isArray(val)) {
           let newPath = path.length ? `${path}[${index}]` : `[${index}]`
@@ -17,7 +21,9 @@ function walkJSON (obj, func) {
       })
     // If this entry is an object then loop over its keys
     } else if (_.isObject(obj)) {
-      Object.keys(obj).forEach(key => {
+      const keys = Object.keys(obj)
+      if (!keys.length && options.finalPathsOnly) func.apply(this, [key, curDepth, path])
+      keys.forEach(key => {
         if (obj[key] !== null) {
           let newPath = path.length ? `${path}.${key}` : key
           traverse(obj[key], curDepth + 1, newPath, key)
@@ -26,6 +32,8 @@ function walkJSON (obj, func) {
           func.apply(this, [key, curDepth + 1, newPath])
         }
       })
+    } else {
+      if (options.finalPathsOnly) func.apply(this, [key, curDepth, path])
     }
   }
   return traverse(obj, 0, '')
@@ -37,13 +45,13 @@ class JMETA {
      * Create a new jmeta instance.
      * @param {object} obj - The object to parse meta data out of
   */
-  constructor (obj) {
+  constructor (obj, options = {}) {
     if (!_.isObject(obj)) throw new Error('Must pass a valid JS object')
     // Define internals to build upon as we walk through a JSON object
     this._map = new Map()
     this._duplicates = []
     // Begin traversal of this object (depth first)
-    walkJSON.call(this, obj, this._add)
+    walkJSON.call(this, obj, this._add, options)
   }
 
   // Getters
